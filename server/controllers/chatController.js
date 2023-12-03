@@ -141,7 +141,7 @@ const renameGroup = async (req, res) => {
 // @desc    Remove user from Group
 // @route   PUT /api/chat/groupremove
 // @access  Protected
-const removeFromGroup = asyncHandler(async (req, res) => {
+const removeFromGroup = async (req, res) => {
     const { chatId, userId } = req.body;
   
     // check if the requester is admin
@@ -164,12 +164,12 @@ const removeFromGroup = asyncHandler(async (req, res) => {
     } else {
       res.json(removed);
     }
-  });
+  };
   
   // @desc    Add user to Group / Leave
   // @route   PUT /api/chat/groupadd
   // @access  Protected
-  const addToGroup = asyncHandler(async (req, res) => {
+  const addToGroup = async (req, res) => {
     const { chatId, userId } = req.body;
   
     // check if the requester is admin
@@ -192,7 +192,7 @@ const removeFromGroup = asyncHandler(async (req, res) => {
     } else {
       res.json(added);
     }
-  });
+  };
 
 module.exports = {
   accessChat,
