@@ -13,6 +13,8 @@ import Login from '../components/Authentication/Login'
 import SignUp from '../components/Authentication/SignUp'
 
 const HomePage = () => {
+
+  
   return (
     <>
       <Container maxW={'xl'} centerContent>

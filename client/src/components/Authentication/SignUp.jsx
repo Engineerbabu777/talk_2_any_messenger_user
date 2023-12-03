@@ -53,7 +53,7 @@ export default function SignUp () {
           "Content-type": "application/json",
         },
       };
-      const { data } = await axios.post(
+      const response = await axios.post(
         "http://localhost:4000/api/user",
         {
           name,
@@ -63,7 +63,7 @@ export default function SignUp () {
         },
         config
       );
-      console.log(data);
+      console.log(response.data);
       toast({
         title: "Registration Successful",
         status: "success",
@@ -71,13 +71,13 @@ export default function SignUp () {
         isClosable: true,
         position: "bottom",
       });
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      localStorage.setItem("userInfo", JSON.stringify(response.data));
       setPicLoading(false);
-      history.push("/chats");
+      // history("/chats");
     } catch (error) {
       toast({
         title: "Error Occured!",
-        description: error.response.data.message,
+        description: error?.response?.data?.message,
         status: "error",
         duration: 5000,
         isClosable: true,
