@@ -10,6 +10,7 @@ import { Button } from '@chakra-ui/react'
 import { ChatState } from '../../Context/ChatProvider'
 import ChatLoading from './ChatLoading'
 import { getSender } from '../../config/ChatLogics'
+import GroupChatModal from './GroupChatModal'
 // import { getSenderFull } from '../../../config/ChatLogics'
 
 export default function MyChats ({ fetchAgain }) {
@@ -73,15 +74,15 @@ export default function MyChats ({ fetchAgain }) {
           alignItems='center'
         >
           My Chats
-          {/* <GroupChatModal>
-      <Button
-        d="flex"
-        fontSize={{ base: "17px", md: "10px", lg: "17px" }}
-        rightIcon={<AddIcon />}
-      >
-        New Group Chat
-      </Button>
-    </GroupChatModal> */}
+          <GroupChatModal>
+            <Button
+              d='flex'
+              fontSize={{ base: '17px', md: '10px', lg: '17px' }}
+              rightIcon={<AddIcon />}
+            >
+              New Group Chat
+            </Button>
+          </GroupChatModal>
         </Box>
         <Box
           display='flex'
