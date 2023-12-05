@@ -1,7 +1,7 @@
 import { FormControl } from '@chakra-ui/form-control'
 import { Input } from '@chakra-ui/input'
 import { Box, Text } from '@chakra-ui/layout'
-// import "./styles.css";
+import "./styles.css";
 import { IconButton, Spinner, useToast } from '@chakra-ui/react'
 // import { getSender, getSenderFull } from "../config/ChatLogics";
 import { useEffect, useState } from 'react'
@@ -11,7 +11,7 @@ import ProfileModal from '../shared/ProfileModal'
 import { ChatState } from '../../Context/ChatProvider'
 import { getSender, getSenderFull } from '../../config/ChatLogics'
 import UpdateGroupChatModal from './UpdateGroupChatModal'
-// import ScrollableChat from "./ScrollableChat";
+import ScrollableChat from "./ScrollableChat";
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([])
@@ -24,6 +24,83 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   const { selectedChat, setSelectedChat, user, notification, setNotification } =
     ChatState()
+
+
+    const fetchMessages = async () => {
+      if (!selectedChat) return;
+  
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        };
+  
+        setLoading(true);
+  
+        const { data } = await axios.get(
+          `http://localhost:4000/api/message/${selectedChat._id}`,
+          config
+        );
+        setMessages(data);
+        setLoading(false);
+  
+      } catch (error) {
+        toast({
+          title: "Error Occured!",
+          description: "Failed to Load the Messages",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        });
+      }
+    };
+
+    const sendMessage = async (event) => {
+      if (event.key === "Enter" && newMessage) {
+        try {
+          const config = {
+            headers: {
+              "Content-type": "application/json",
+              Authorization: `Bearer ${user.token}`,
+            },
+          };
+          setNewMessage("");
+          const { data } = await axios.post(
+            "http://localhost:4000/api/message",
+            {
+              content: newMessage,
+              chatId: selectedChat,
+            },
+            config
+          );
+          setMessages([...messages, data]);
+        } catch (error) {
+          toast({
+            title: "Error Occured!",
+            description: "Failed to send the Message",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+            position: "bottom",
+          });
+        }
+      }
+    };
+
+    useEffect(() => {
+      fetchMessages();
+  
+      // selectedChatCompare = selectedChat;
+      // eslint-disable-next-line
+    }, [selectedChat]);
+
+    const typingHandler = (e) => {
+      setNewMessage(e.target.value);
+  
+    };
+  
 
   return (
     <>
@@ -57,21 +134,21 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                   <>
                     {selectedChat.chatName.toUpperCase()}
                     <UpdateGroupChatModal
-                    // fetchMessages={fetchMessages}
-                    // fetchAgain={fetchAgain}
-                    // setFetchAgain={setFetchAgain}
+                    fetchMessages={fetchMessages}
+                    fetchAgain={fetchAgain}
+                    setFetchAgain={setFetchAgain}
                   />
                   </>
                 ))}
             </Text>
-            {/* <Box
-            d="flex"
+            <Box
+            display="flex"
             flexDir="column"
             justifyContent="flex-end"
             p={3}
             bg="#E8E8E8"
             w="100%"
-            h="100%"
+            h="90%"
             borderRadius="lg"
             overflowY="hidden"
           >
@@ -97,12 +174,12 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             >
               {istyping ? (
                 <div>
-                  <Lottie
+                  {/* <Lottie
                     options={defaultOptions}
                     // height={50}
                     width={70}
                     style={{ marginBottom: 15, marginLeft: 0 }}
-                  />
+                  /> */}
                 </div>
               ) : (
                 <></>
@@ -114,8 +191,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 value={newMessage}
                 onChange={typingHandler}
               />
-            </FormControl>
-          </Box> */}
+             </FormControl> 
+          </Box>
           </>
         ) : (
           // to get socket.io on same page
